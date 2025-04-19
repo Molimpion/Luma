@@ -39,7 +39,6 @@ const Cadastro: React.FC = () => {
       concordoComOsTermos,
     };
 
-    // Enviar o novo usuário para o JSON Server
     const response = await fetch("http://localhost:3001/users", {
       method: "POST",
       headers: {
@@ -50,7 +49,7 @@ const Cadastro: React.FC = () => {
 
     if (response.ok) {
       console.log("Novo usuário cadastrado com sucesso!");
-      navigate("/login"); // Redirecionar para a página de login
+      navigate("/login");  
     } else {
       setErrorMessage("Erro ao cadastrar o usuário.");
     }
