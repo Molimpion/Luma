@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [cpf, setCpf] = useState("");
@@ -10,9 +10,10 @@ const Login: React.FC = () => {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
-      navigate("/logado"); 
+      navigate("/logado");
     }
   }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await fetch("http://localhost:3001/users");
@@ -22,7 +23,7 @@ const Login: React.FC = () => {
 
     if (user) {
       localStorage.setItem("userId", user.id);
-      navigate("/logado"); 
+      navigate("/logado");
       window.location.reload();
     } else {
       setErrorMessage("Credenciais incorretas");
@@ -62,6 +63,12 @@ const Login: React.FC = () => {
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
           Entrar
         </button>
+
+        <div className="mt-4 text-center">
+          <Link to="/cadastro" className="text-blue-500 hover:text-blue-700 text-sm">
+            Criar uma conta
+          </Link>
+        </div>
       </form>
     </div>
   );
