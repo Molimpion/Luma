@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "nome": "Miguel Amaral",
+      "cpf": "12345678901",
+      "nomeUsuario": "miguel_amaral",
+      "email": "miguel@example.com",
+      "senha": "senha123",
+      "concordoComOsTermos": true,
+      "id": "1"
+    },
+    {
+      "nome": "Ana Souza",
+      "cpf": "98765432100",
+      "nomeUsuario": "ana_souza",
+      "email": "ana@example.com",
+      "senha": "senha456",
+      "concordoComOsTermos": true,
+      "id": "2"
+    },
+    {
+      "nome": "João Pereira",
+      "cpf": "11223344556",
+      "nomeUsuario": "joao_pereira",
+      "email": "joao@example.com",
+      "senha": "senha789",
+      "concordoComOsTermos": true,
+      "id": "3"
+    },
+    {
+      "nome": "Maria Silva",
+      "cpf": "66778899000",
+      "nomeUsuario": "maria_silva",
+      "email": "maria@example.com",
+      "senha": "senha101",
+      "concordoComOsTermos": true,
+      "id": "4"
+    },
+    {
+      "nome": "Carlos Oliveira",
+      "cpf": "22334455667",
+      "nomeUsuario": "carlos_oliveira",
+      "email": "carlos@example.com",
+      "senha": "senha202",
+      "concordoComOsTermos": true,
+      "id": "5"
+    },
+    {
+      "nome": "Miguel Amaral",
+      "cpf": "1",
+      "nomeUsuario": "miguel_amaral",
+      "email": "miguel@example.com",
+      "senha": "1",
+      "concordoComOsTermos": true,
+      "id": "6"
+    },
+    {
+      "id": "082f",
+      "nome": "teste",
+      "cpf": "123123",
+      "usuario": "123123",
+      "email": "am@m.com",
+      "senha": "3241",
+      "concordoComOsTermos": true
+    },
+    {
+      "id": "4401",
+      "nome": "asd",
+      "cpf": "123",
+      "usuario": "123",
+      "email": "123@123.com",
+      "senha": "123",
+      "concordoComOsTermos": true
+    },
+    {
+      "id": "ca58",
+      "nome": "asdasd",
+      "cpf": "asdasd",
+      "usuario": "sadasd",
+      "email": "asdas@asd.com",
+      "senha": "asd",
+      "concordoComOsTermos": true
+    },
+    {
+      "id": "4bd9",
+      "nome": "asd",
+      "cpf": "123123",
+      "usuario": "a12321",
+      "email": "a@asd.com",
+      "senha": "3241",
+      "concordoComOsTermos": true
+    },
+    {
+      "id": "42fb",
+      "nome": "asd",
+      "cpf": "123213",
+      "usuario": "123123",
+      "email": "123@123.com",
+      "senha": "123",
+      "concordoComOsTermos": true
+    }
+  ]
+}
