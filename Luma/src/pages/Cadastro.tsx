@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cadastro: React.FC = () => {
   const [nome, setNome] = useState("");
@@ -12,12 +12,6 @@ const Cadastro: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate("/logado"); 
-    }
-  }, [navigate]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -45,9 +39,21 @@ const Cadastro: React.FC = () => {
       concordoComOsTermos,
     };
 
-    console.log("Novo usuário cadastrado:", newUser);
+    // Enviar o novo usuário para o JSON Server
+    const response = await fetch("http://localhost:3001/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
 
-    navigate("/login");
+    if (response.ok) {
+      console.log("Novo usuário cadastrado com sucesso!");
+      navigate("/login"); // Redirecionar para a página de login
+    } else {
+      setErrorMessage("Erro ao cadastrar o usuário.");
+    }
   };
 
   return (
@@ -143,6 +149,12 @@ const Cadastro: React.FC = () => {
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
           Cadastrar
         </button>
+
+        <div className="mt-4 text-center">
+          <Link to="/login" className="text-blue-500 hover:text-blue-700 text-sm underline">
+            Já possui uma conta? Faça login
+          </Link>
+        </div>
       </form>
     </div>
   );
