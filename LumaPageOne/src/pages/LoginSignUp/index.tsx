@@ -75,7 +75,7 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/users?username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}`
+        `api/users?username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}`
       );
 
       if (!response.ok) {

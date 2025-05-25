@@ -16,7 +16,7 @@ export function UserProvider({ children, userId }: UserProviderProps) {
     setLoadingUser(true);
     setErrorUser(null);
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`);
+      const response = await fetch(`api/users/${userId}`);
       if (!response.ok) {
         throw new Error(
           `Erro ao buscar dados do usuário: ${response.status} - ${response.statusText} `
@@ -55,7 +55,7 @@ export function UserProvider({ children, userId }: UserProviderProps) {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        const response = await fetch(`api/users/${userId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
