@@ -75,7 +75,7 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
 
     try {
       const response = await fetch(
-        `api/users?username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}`
+        `/api/users?username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}`
       );
 
       if (!response.ok) {
