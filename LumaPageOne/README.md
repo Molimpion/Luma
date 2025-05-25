@@ -6,11 +6,16 @@
 
 ```bash
  npm install
-2. Em uma aba do terminal, inicie o json server
-  npm run start:server
-3. Em outra aba, inicie o front-end
-  npm run dev
 ```
+
+2. Em uma aba do terminal, inicie o json server
+
+   ```npm run start:server
+
+   ```
+
+3. Em outra aba, inicie o front-end
+   `npm run dev`
 
 **Membros:**
 
