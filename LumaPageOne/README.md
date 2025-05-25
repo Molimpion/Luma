@@ -29,7 +29,3 @@ npm run start:server
 | Manoel Olimpio      | Virginia Fernandes |
 | Victória de Gouveia | Maria Eduarada     |
 | Maria Isabela       | Amanda Cruz        |
-
-```
-
-```
