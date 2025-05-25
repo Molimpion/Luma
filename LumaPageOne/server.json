@@ -1,3 +1,57 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "6412",
+      "nome": "João",
+      "cpf": "12345678900",
+      "username": "joaocarlos",
+      "email": "joaocarlos@gmail.com",
+      "password": "123456",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 0,
+      "saidas": 0,
+      "faltas": 0
+    },
+    {
+      "id": "d63d",
+      "nome": "João Carlos",
+      "cpf": "12345678900",
+      "username": "joaocarlos",
+      "email": "joaocarlos@hotmail.com",
+      "password": "carlos123",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 6,
+      "saidas": 6,
+      "faltas": 0
+    },
+    {
+      "id": "9715",
+      "nome": "maria isabela",
+      "cpf": "98765432101",
+      "username": "isamaria",
+      "email": "mariaisa@gmail.com",
+      "password": "maria123456",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 3,
+      "saidas": 3,
+      "faltas": 0
+    },
+    {
+      "id": "179e",
+      "nome": "Luma da Silva ",
+      "cpf": "12345678912",
+      "username": "lumasilva",
+      "email": "lumadasilva@gmail.com",
+      "password": "luma12345",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 1,
+      "saidas": 1,
+      "faltas": 0
+    }
+  ],
+  "pontos": []
 }

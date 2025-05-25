@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-
 import "leaflet/dist/leaflet.css";
 import {
   Box,
@@ -8,68 +7,67 @@ import {
   IconButton,
   Paper,
   Divider,
-  SnackbarCloseReason,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
+  Snackbar,
+  Alert,
+  SnackbarCloseReason,
 } from "@mui/material";
 import {
   ArrowBackIosOutlined as ArrowBack,
   RestaurantOutlined,
   Edit as EditIcon,
-  Delete as DeleteIcon,
 } from "@mui/icons-material";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import { useNavigate } from "react-router-dom";
 
-import { Snackbar, Alert } from "@mui/material";
 import { UserCardInfo } from "../../components/UserInfo";
 import { Greeting } from "../../components/saudacao";
+import { useUser } from "../../hooks/useUser";
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
 });
-
 L.Marker.prototype.options.icon = DefaultIcon;
 
 interface Ponto {
   id: string;
   dataHora: string;
   timestamp: number;
+  type: "entrada" | "saida";
 }
 
-interface RegistrarPontoProps {
-  userId: "string";
-}
-
-export function RegistrarPonto({ userId }: RegistrarPontoProps) {
+export function RegistrarPonto() {
   const navigate = useNavigate();
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  // Array de objetos Ponto
+  const { userData, loadingUser, errorUser, updateUserCounts } = useUser();
+
   const [marcacoesDeHoje, setMarcacoesDeHoje] = useState<Ponto[]>([]);
 
-  // Estados para o modal de edição
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [currentPontoToEdit, setCurrentPontoToEdit] = useState<Ponto | null>(
-    null
-  );
   const [editedDateTime, setEditedDateTime] = useState("");
 
-  console.log("ID do Usuário", userId);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "info">(
+    "success"
+  );
 
-  const simulatedUserLocation = {
-    lat: -8.05,
-    lng: -34.9,
-  };
+  const simulatedUserLocation = { lat: -8.05, lng: -34.9 };
   const zoomLevel = 15;
 
-  const handleBaterPonto = () => {
+  const lastPontoType =
+    marcacoesDeHoje.length > 0 ? marcacoesDeHoje[0].type : "saida";
+  const newPontoType: "entrada" | "saida" =
+    lastPontoType === "entrada" ? "saida" : "entrada";
+
+  const handleBaterPonto = async () => {
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
@@ -86,71 +84,94 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
       id: now.getTime().toString(),
       dataHora: formattedDateTime,
       timestamp: now.getTime(),
+      type: newPontoType,
     };
 
-    // Adiciona a nova marcação ao início do array
-    setMarcacoesDeHoje((prevMarcacoes) => [newPonto, ...prevMarcacoes]);
-    console.log("Ponto batido!");
+    setMarcacoesDeHoje((prev) => [newPonto, ...prev]);
+    await updateUserCounts(newPontoType);
+
+    setSnackbarMessage("Ponto registrado com sucesso!");
+    setSnackbarSeverity("success");
     setOpenSnackbar(true);
   };
+
   const handleCloseSnackbar = (
-    _event: React.SyntheticEvent | Event | undefined,
+    _event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
-    if (reason === "clickaway") {
-      return;
-    }
+    if (reason === "clickaway") return;
     setOpenSnackbar(false);
-  };
-
-  const userName = "Carlos";
-
-  const userInfoData = {
-    name: "Carlos Moraes",
-    descricao: "QA (Quality Assurance)",
-    avatar: "/images/carlos_photo.jpg",
-    entradas: 4,
-    saida: 3,
-    faltas: 0,
   };
 
   const handleVoltar = () => {
     navigate("/app/ponto");
   };
 
-  //Função de Edição e Remoção
-
-  const handleOpenEditModal = (ponto: Ponto) => {
-    setCurrentPontoToEdit(ponto);
-    setEditedDateTime(ponto.dataHora);
+  const handleOpenEditModal = (dataHora: string) => {
+    setEditedDateTime(dataHora);
     setEditModalOpen(true);
   };
 
   const handleCloseEditModal = () => {
     setEditModalOpen(false);
-    setCurrentPontoToEdit(null);
+
     setEditedDateTime("");
   };
 
   const handleSaveEditedPonto = () => {
-    if (currentPontoToEdit && editedDateTime.trim() != "") {
-      setMarcacoesDeHoje((prevMarcacoes) =>
-        prevMarcacoes.map((ponto) =>
-          ponto.id === currentPontoToEdit.id
-            ? { ...ponto, dataHora: editedDateTime }
-            : ponto
-        )
-      );
-      handleCloseEditModal();
-      setOpenSnackbar(true);
-    }
-  };
-  const handleRemovePonto = (idToRemove: string) => {
-    setMarcacoesDeHoje((prevMarcacoes) =>
-      prevMarcacoes.filter((ponto) => ponto.id !== idToRemove)
+    handleCloseEditModal();
+    setSnackbarMessage(
+      "Solicitação de alteração enviada ao RH. Em breve retornaremos com a resposta."
     );
+    setSnackbarSeverity("info");
     setOpenSnackbar(true);
   };
+
+  if (loadingUser) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography>Carregando dados do usuário...</Typography>
+      </Box>
+    );
+  }
+  if (errorUser) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography color="error">{errorUser}</Typography>
+      </Box>
+    );
+  }
+  if (!userData) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography>
+          Nenhum dado de usuário disponível. Por favor, faça login novamente.
+        </Typography>
+        <Button onClick={() => navigate("/")}>Ir para Login</Button>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -159,17 +180,20 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
-          paddingTop: "5.5rem",
+          padding: "2.5rem",
         }}
       >
-        <Box sx={{ marginBottom: "2.5rem", marginLeft: 1.5 }}>
-          <Greeting name={userName} />
+        <Box sx={{ marginBottom: "2.5rem", marginLeft: 3 }}>
+          <Greeting name={userData.name || "usuário"} />
         </Box>
       </Box>
-      <Box sx={{ marginLeft: "1rem", marginTop: "-4.5rem" }}>
-        <UserCardInfo {...userInfoData} cardWidth="100%" />
+
+      <Box
+        sx={{ marginLeft: "1.7rem", marginTop: "-4.5rem", pr: 3.5, pl: 1.5 }}
+      >
+        <UserCardInfo {...userData} cardWidth="100%" />
       </Box>
+
       <Box
         sx={{
           display: "flex",
@@ -196,6 +220,8 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
       <Box
         sx={{
           padding: 3,
+          mr: 1,
+          ml: 1,
           display: "flex",
           justifyContent: "center",
         }}
@@ -218,6 +244,7 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
             sx={{ position: "absolute", top: 8, right: 8 }}
           >
             <ArrowBack />
+            <Typography>Retornar</Typography>
           </IconButton>
 
           <Typography variant="h5" fontWeight="bold" mb={2}>
@@ -228,7 +255,6 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
               Registrar ponto
             </Typography>
 
-            {/* Container principal em Grid */}
             <Box
               sx={{
                 display: "grid",
@@ -244,7 +270,6 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                 mb: 2,
               }}
             >
-              {/* MARCAÇÕES DE HOJE */}
               <Paper
                 sx={{
                   gridRow: { xs: "1", md: "1 / 3" },
@@ -262,7 +287,6 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                     MARCAÇÕES DE HOJE
                   </Typography>
                   <Divider sx={{ mb: 1, mt: 2, background: "#5D3998" }} />
-                  {/* Renderiza as macações de hoje */}
                   {marcacoesDeHoje.length > 0 ? (
                     marcacoesDeHoje.map((ponto) => (
                       <Box
@@ -273,27 +297,17 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                           justifyContent: "space-between",
                           alignItems: "center",
                           p: "0.5rem 1rem",
-                          my: 0,
                           mb: 1,
                         }}
                       >
                         <Typography>{ponto.dataHora}</Typography>
-                        <Box>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleOpenEditModal(ponto)}
-                            arial-label="editar"
-                          >
-                            <EditIcon sx={{ color: "#5D3998" }} />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleRemovePonto(ponto.id)}
-                            aria-label="remover"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Box>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenEditModal(ponto.dataHora)}
+                          aria-label="editar"
+                        >
+                          <EditIcon sx={{ color: "#5D3998" }} />
+                        </IconButton>
                       </Box>
                     ))
                   ) : (
@@ -303,7 +317,7 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                         display: "flex",
                         alignItems: "center",
                         p: "0.5rem 1rem",
-                        my: 0,
+                        mb: 1,
                       }}
                     >
                       <Typography>Nenhuma marcação registrada hoje.</Typography>
@@ -333,12 +347,10 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                     <Typography fontWeight="bold" variant="h6">
                       Bater ponto
                     </Typography>
-                    <Typography variant="caption">Clique duas vezes</Typography>
                   </Paper>
                 </Box>
               </Paper>
 
-              {/* MAPA */}
               <Box
                 sx={{
                   gridRow: "1",
@@ -364,7 +376,6 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                 </MapContainer>
               </Box>
 
-              {/* ESCALA DE HOJE */}
               <Paper
                 sx={{
                   gridRow: { xs: "3", md: "2" },
@@ -400,22 +411,6 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
                 </Box>
               </Paper>
             </Box>
-
-            {/* Snackbar de confirmação */}
-            <Snackbar
-              open={openSnackbar}
-              autoHideDuration={3000}
-              onClose={handleCloseSnackbar}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <Alert
-                onClose={handleCloseSnackbar}
-                severity="success"
-                sx={{ width: "100%" }}
-              >
-                Ponto registrado com sucesso!
-              </Alert>
-            </Snackbar>
           </Box>
 
           <Snackbar
@@ -426,18 +421,17 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
           >
             <Alert
               onClose={handleCloseSnackbar}
-              severity="success"
+              severity={snackbarSeverity}
               sx={{ width: "100%" }}
             >
-              Ponto registrado com sucesso!
+              {snackbarMessage}
             </Alert>
           </Snackbar>
         </Paper>
       </Box>
 
-      {/* Modal de Edição */}
       <Dialog open={editModalOpen} onClose={handleCloseEditModal}>
-        <DialogTitle>Corrigir Ponto</DialogTitle>
+        <DialogTitle>Solicitar Correção de Ponto</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -455,7 +449,7 @@ export function RegistrarPonto({ userId }: RegistrarPontoProps) {
         <DialogActions>
           <Button onClick={handleCloseEditModal}>Cancelar</Button>
           <Button onClick={handleSaveEditedPonto} variant="contained">
-            Salvar
+            Enviar Solicitação
           </Button>
         </DialogActions>
       </Dialog>

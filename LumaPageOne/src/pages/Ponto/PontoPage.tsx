@@ -1,5 +1,3 @@
-// src/pages/Ponto/PontoPage.tsx
-
 import React from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import {
@@ -12,34 +10,26 @@ import { UserCardInfo } from "../../components/UserInfo";
 import { Greeting } from "../../components/saudacao";
 import { PontoHome } from "./Ponto";
 import { Link, Outlet } from "react-router-dom";
+import { useUser } from "../../hooks/useUser";
 
 export const PontoPage: React.FC = () => {
-  const userName = "Carlos";
-
-  const userInfoData = {
-    name: "Carlos Moraes",
-    descricao: "QA (Quality Assurance)",
-    avatar: "/images/carlos_photo.jpg",
-    entradas: 4,
-    saida: 3,
-    faltas: 0,
-  };
+  const { userData } = useUser();
 
   const pontoHomeItems = [
     {
       icon: <AccessTimeOutlined sx={{ fontSize: "3rem" }} />,
       title: "Registrar Ponto",
-      path: "registrar", // apenas o segmento final
+      path: "registrar",
     },
     {
       icon: <EditNoteOutlined sx={{ fontSize: "3rem" }} />,
       title: "Solicitar Abono",
-      path: "solicitar-abono",
+      path: "solicitarabono",
     },
     {
       icon: <PunchClock sx={{ fontSize: "3rem" }} />,
       title: "Espelho de Ponto",
-      path: "espelho-de-ponto",
+      path: "espelhoponto",
     },
   ];
 
@@ -50,9 +40,13 @@ export const PontoPage: React.FC = () => {
           width: "100%",
         }}
       >
-        <Greeting name={userName} />
+        <Box sx={{ marginLeft: 5, mt: -9.2 }}>
+          <Greeting name={userData?.name || "usuário"} />{" "}
+        </Box>
 
-        <UserCardInfo {...userInfoData} cardWidth="100%" />
+        <Box sx={{ marginLeft: "1rem", mt: 1, pr: -1, pl: 0 }}>
+          {userData && <UserCardInfo {...userData} cardWidth="100%" />}{" "}
+        </Box>
 
         <Box
           sx={{
@@ -77,7 +71,6 @@ export const PontoPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Links para as sub-páginas de Ponto */}
         <Box sx={{ display: "inline-block" }}>
           {pontoHomeItems.map((item) => (
             <Link
@@ -95,7 +88,6 @@ export const PontoPage: React.FC = () => {
           ))}
         </Box>
 
-        {/* Outlet: renderiza RegistrarPonto, SolicitarAbono, Espelho, etc */}
         <Box sx={{ mt: 4, width: "100%" }}>
           <Outlet />
         </Box>

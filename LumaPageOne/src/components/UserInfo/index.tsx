@@ -1,6 +1,12 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import avatarPhoto from "../../assets/carlosPhoto.png";
+import { useUser } from "../../hooks/useUser";
+import defaultAvatar from "../../assets/avatarRandom.png";
+import {
+  LoginOutlined,
+  LogoutOutlined,
+  CloseOutlined,
+} from "@mui/icons-material";
 
 const UserCardContainer = styled("div")<{ cardWidth: string }>`
   background: #5d3998;
@@ -23,6 +29,7 @@ const AvatarImage = styled("img")`
   width: 6.1rem;
   height: 5.8rem;
   border-radius: 50%;
+  margin-left: 1rem;
 `;
 
 const UserInfoName = styled("div")`
@@ -56,21 +63,18 @@ const NameInfoText = styled("span")({
 });
 
 const InfoNumber = styled("span")`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1rem;
   margin-top: 1rem;
-  margin-right: 5.375rem;
-  margin-left: 5.375rem;
+  /* margin-right: 5.375rem;
+  margin-left: 5.375rem; */
   color: #fff;
   font-weight: bold;
 `;
 
 interface UserInfoProps {
-  name: string;
-  descricao: string;
-  avatar: string;
-  entradas: number;
-  saida: number;
-  faltas: number;
   cardWidth: string;
   entradasStyle?: React.CSSProperties;
   saidaStyle?: React.CSSProperties;
@@ -78,16 +82,36 @@ interface UserInfoProps {
 }
 
 export function UserCardInfo({
-  name,
-  descricao,
-  entradas,
-  saida,
-  faltas,
   cardWidth,
   entradasStyle,
   saidaStyle,
   faltasStyle,
 }: UserInfoProps) {
+  const { userData, loadingUser, errorUser } = useUser();
+
+  if (loadingUser) {
+    return (
+      <UserCardContainer cardWidth={cardWidth}>
+        Carregando informações do usuário...
+      </UserCardContainer>
+    );
+  }
+
+  if (errorUser) {
+    return (
+      <UserCardContainer cardWidth={cardWidth}>
+        Erro ao carregar usuário: {errorUser}
+      </UserCardContainer>
+    );
+  }
+  if (!userData) {
+    return (
+      <UserCardContainer cardWidth={cardWidth}>
+        Nenhum usuário logado ou dados não encontrados.
+      </UserCardContainer>
+    );
+  }
+
   return (
     <UserCardContainer cardWidth={cardWidth}>
       <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
@@ -99,23 +123,42 @@ export function UserCardInfo({
             flexGrow: 1,
           }}
         >
-          <AvatarImage src={avatarPhoto} alt={name} />
+          <AvatarImage
+            src={userData.avatar || defaultAvatar}
+            alt={userData.name || userData.username || "Avatar do Usuário"}
+          />
           <UserInfoName>
-            <NameInfoText>{name}</NameInfoText>
-            <UserInfoDescription>{descricao}</UserInfoDescription>
+            <NameInfoText>{userData.name || userData.username}</NameInfoText>
+            <UserInfoDescription>{userData.descricao}</UserInfoDescription>
           </UserInfoName>
         </div>
-        <div style={{ display: "flex", gap: "1rem", marginLeft: "auto" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "4.5rem",
+            marginLeft: "auto",
+            marginRight: "5rem",
+          }}
+        >
           <InfoItemRoot style={entradasStyle}>
-            <InfoNumber>{entradas}</InfoNumber>
+            <InfoNumber>
+              <LoginOutlined sx={{ fontSize: "2rem", color: "#FFF" }} />
+              <span>{userData.entradas}</span>
+            </InfoNumber>
             <InfoText>Entradas</InfoText>
           </InfoItemRoot>
           <InfoItemRoot style={saidaStyle}>
-            <InfoNumber>{saida}</InfoNumber>
+            <InfoNumber>
+              <LogoutOutlined sx={{ fontSize: "2rem", color: "#FFF" }} />
+              <span>{userData.saida}</span>
+            </InfoNumber>
             <InfoText>Saída</InfoText>
           </InfoItemRoot>
           <InfoItemRoot style={faltasStyle}>
-            <InfoNumber>{faltas}</InfoNumber>
+            <InfoNumber>
+              <CloseOutlined sx={{ fontSize: "2rem", color: "#FFF" }} />
+              <span>{userData.faltas}</span>
+            </InfoNumber>
             <InfoText>Faltas</InfoText>
           </InfoItemRoot>
         </div>

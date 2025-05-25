@@ -4,7 +4,6 @@ import { LeftImageSection } from "../../components/LeftSection";
 import { Container } from "./styles";
 
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import CenterFocusWeakOutlinedIcon from "@mui/icons-material/CenterFocusWeakOutlined";
 import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 import Logo from "../../assets/LogoFudida.png";
@@ -14,14 +13,17 @@ import { Link } from "react-router-dom";
 
 type LoginSignUpProps = {
   // eslint-disable-next-line no-unused-vars
-  onLogin: (msg: string) => void;
+  onLogin: (msg: string, userId: string) => void;
 };
 
-type User = {
+interface LoggedInUser {
+  id: string;
   email: string;
   cpf: string;
-  senha: string;
-};
+  username: string;
+  password?: string;
+  name: string;
+}
 
 export function LoginSignUp({ onLogin }: LoginSignUpProps) {
   const navigate = useNavigate();
@@ -32,22 +34,9 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
   const [errorUsuario, setErrorUsuario] = useState("");
   const [errorSenha, setErrorSenha] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
-  // Mock "banco de dados" com dois usuários
-  const usuariosMock: User[] = [
-    {
-      email: "isabela@gmail.com",
-      cpf: "123.456.789-00",
-      senha: "senha123",
-    },
-    {
-      email: "carlos@gmail.com",
-      cpf: "987.654.321-00",
-      senha: "senha456",
-    },
-  ];
-
-  // Validação do campo usuário (não vazio)
+  // Validação do campo usuário
   const validarUsuario = (value: string) => {
     if (!value.trim()) {
       return "O usuário é obrigatório";
@@ -66,12 +55,13 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
     return "";
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Limpar erros antigos
     setErrorUsuario("");
     setErrorSenha("");
+    setLoginError(null);
 
     // Validar campos localmente
     const usuarioError = validarUsuario(usuario);
@@ -83,25 +73,40 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
       return;
     }
 
-    // Simula busca no "banco de dados"
-    const usuarioEncontrado = usuariosMock.find(
-      (u) =>
-        u.email.toLowerCase() === usuario.toLowerCase() || u.cpf === usuario
-    );
+    try {
+      const response = await fetch(
+        `http://localhost:3001/users?username=${encodeURIComponent(usuario)}&password=${encodeURIComponent(senha)}`
+      );
 
-    if (!usuarioEncontrado) {
-      setErrorUsuario("Usuário não encontrado");
-      return;
+      if (!response.ok) {
+        throw new Error("Erro de rede ou servidor indisponível.");
+      }
+
+      const users: LoggedInUser[] = await response.json();
+
+      if (users.length === 0) {
+        setLoginError("Credenciais inválidas. Verifique seu usuário e senha");
+        return;
+      }
+
+      const loggedInUser = users[0];
+
+      console.log("Usuário Logado", loggedInUser);
+      localStorage.setItem("loggedInUserId", loggedInUser.id);
+      localStorage.setItem(
+        "loggedInUserName",
+        loggedInUser.username || loggedInUser.email
+      );
+
+      onLogin(
+        `Bem-Vindo,  ${loggedInUser.name || loggedInUser.username || loggedInUser.email}!`,
+        loggedInUser.id
+      );
+      navigate("/app/ponto");
+    } catch (err: any) {
+      console.error("Erro no login:", err);
+      setLoginError(err.message || "Ocorreu um erro inesperado no login.");
     }
-
-    if (usuarioEncontrado.senha !== senha) {
-      setErrorSenha("Senha incorreta");
-      return;
-    }
-
-    // Se chegou aqui, login OK
-    onLogin(`Usuário ${usuarioEncontrado.email} logado!`);
-    navigate("/app/inicio");
   };
 
   return (
@@ -120,7 +125,7 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
             <input
               type="text"
               id="usuario"
-              placeholder="Insira seu CPF ou Usuário"
+              placeholder="Insira seu Usuário"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               required
@@ -174,6 +179,12 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
             <a href="#">Esqueceu sua senha?</a>
           </div>
 
+          {loginError && (
+            <p style={{ color: "red", textAlign: "center", marginTop: "10px" }}>
+              {loginError}
+            </p>
+          )}
+
           <Button
             fullWidth
             variant="contained"
@@ -188,7 +199,6 @@ export function LoginSignUp({ onLogin }: LoginSignUpProps) {
           <Divider>
             <span>ou</span>
           </Divider>
-          <CenterFocusWeakOutlinedIcon className="photoIcon" />
           <p className="registerTextArea">
             Não possui uma conta? <Link to="/cadastro">Cadastre-se</Link>
           </p>

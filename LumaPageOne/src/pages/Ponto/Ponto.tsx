@@ -8,7 +8,7 @@ interface ActionCardProps {
 }
 
 export const PontoHome = ({ icon, title, onClick }: ActionCardProps) => (
-  <Box sx={{ px: 1, py: 1, width: "23rem", mt: -1 }}>
+  <Box sx={{ px: 1, py: 1, width: "23rem" }}>
     <Card
       onClick={onClick}
       sx={{
