@@ -30,6 +30,4 @@ npm run start:server
 | Victória de Gouveia | Maria Eduarada     |
 | Maria Isabela       | Amanda Cruz        |
 
-```
 
-```
