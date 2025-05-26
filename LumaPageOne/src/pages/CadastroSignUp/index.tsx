@@ -44,7 +44,7 @@ export function CadastroSignUp({ onRegister }: CadastroSignUpProps) {
       email: email,
       password: senha,
       descricao: "Novo Colaborador",
-      avatar: "/images/default_avatar.jpg",
+      avatar: "",
       entradas: 0,
       saidas: 0,
       faltas: 0,
