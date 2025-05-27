@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography, Divider, Button } from "@mui/material";
+import { Box, Typography, Divider, Button, IconButton } from "@mui/material"; // Importe IconButton aqui
 import { Main } from "../../components/SideBarPages";
 import { UserCardInfo } from "../../components/UserInfo";
 import { PointRecordTable } from "../../components/EspelhoPonto/PointRecordTable";
@@ -8,6 +8,7 @@ import { PointActions } from "../../components/EspelhoPonto/PointAction";
 import { useUser } from "../../hooks/useUser";
 import { Greeting } from "../../components/saudacao";
 import { useNavigate } from "react-router-dom";
+import { ArrowBackIosOutlined as ArrowBack } from "@mui/icons-material"; // Importe o ícone aqui
 
 export const EspelhoPontoPage = () => {
   const navigate = useNavigate();
@@ -43,6 +44,11 @@ export const EspelhoPontoPage = () => {
 
     console.log("Próximo mês");
   };
+
+  const handleVoltar = () => {
+    navigate(-1); // Retorna para a página anterior
+  };
+
   if (loadingUser) {
     return (
       <Box
@@ -109,53 +115,96 @@ export const EspelhoPontoPage = () => {
         <UserCardInfo {...userData} cardWidth="100%" />
       </Box>
       <Main>
-        {/* Container principal */}
-        <Box sx={{ padding: 3 }} />
-
-        {/* Título com Seta para a Esquerda */}
-        <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
-          <Typography variant="h6">Espelho de Ponto</Typography>
-        </Box>
-
-        {/* Caixa de Período (Centralizada) */}
-        <Box
-          sx={{ display: "flex", justifyContent: "center", marginBottom: 3 }}
-        >
-          <PeriodSelector
-            currentMonth={new Intl.DateTimeFormat("pt-BR", {
-              year: "numeric",
-              month: "long",
-            })
-              .format(currentMonth)
-              .toUpperCase()}
-            onPrevious={handlePreviousMonth}
-            onNext={handleNextMonth}
-          />
-        </Box>
-
-        {/* Separador visual */}
-        <Box sx={{ mt: 4 }}>
-          <Divider />
-        </Box>
-
-        {/* Container Principal (Layout em Linha) */}
         <Box
           sx={{
             display: "flex",
-            gap: 5,
-            alignItems: "flex-start",
-            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            mt: 3,
+            mb: -3,
+            paddingLeft: "1.8rem", // Ajuste o paddingLeft para corresponder
           }}
         >
-          {/* Parte Esquerda: Lista de Datas, Entrada e Saída */}
-          <Box sx={{ flex: 1, width: { xs: "100%", md: "auto" } }}>
-            {" "}
-            {/* Largura total em xs */}
-            <PointRecordTable records={pointRecords} />
-          </Box>
+          <Divider
+            orientation="vertical"
+            sx={{ height: "20px", width: "3px", bgcolor: "#5D3998", mr: 0.5 }}
+          />
+          <Typography variant="subtitle1" color="textSecondary">
+            Espelho de Ponto
+          </Typography>
+        </Box>
 
-          {/* Parte Direita: Botões de Ação */}
-          <PointActions />
+        <Box
+          sx={{
+            backgroundColor: "white",
+            padding: 3,
+            borderRadius: 3,
+            marginTop: 3,
+            mr: 1, // Adicionado margin-right para corresponder
+            ml: 1, // Adicionado margin-left para corresponder
+          }}
+        >
+          {/* Adicionado o IconButton para "Retornar" aqui */}
+          <IconButton
+            onClick={handleVoltar}
+            sx={{ position: "absolute", top: 8, right: 8 }} // Posiciona o botão no canto superior direito
+          >
+            <ArrowBack />
+            <Typography>Retornar</Typography>
+          </IconButton>
+
+          {/* Título da página dentro do container */}
+          <Typography variant="h5" fontWeight="bold" mb={2}>
+            Espelho de Ponto
+          </Typography>
+
+          {/* Container principal */}
+          <Box sx={{ p: 2 }}>
+            {/* Caixa de Período (Centralizada) */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 3,
+              }}
+            >
+              <PeriodSelector
+                currentMonth={new Intl.DateTimeFormat("pt-BR", {
+                  year: "numeric",
+                  month: "long",
+                })
+                  .format(currentMonth)
+                  .toUpperCase()}
+                onPrevious={handlePreviousMonth}
+                onNext={handleNextMonth}
+              />
+            </Box>
+
+            {/* Separador visual */}
+            <Box sx={{ mt: 4 }}>
+              <Divider />
+            </Box>
+
+            {/* Container Principal (Layout em Linha) */}
+            <Box
+              sx={{
+                backgroundColor: "white",
+                display: "flex",
+                gap: 5,
+                alignItems: "flex-start",
+                flexDirection: { xs: "column", md: "row" },
+              }}
+            >
+              {/* Parte Esquerda: Lista de Datas, Entrada e Saída */}
+              <Box sx={{ flex: 1, width: { xs: "100%", md: "auto" } }}>
+                {" "}
+                {/* Largura total em xs */}
+                <PointRecordTable records={pointRecords} />
+              </Box>
+
+              {/* Parte Direita: Botões de Ação */}
+              <PointActions />
+            </Box>
+          </Box>
         </Box>
       </Main>
     </>

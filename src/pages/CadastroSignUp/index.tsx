@@ -21,6 +21,7 @@ export function CadastroSignUp({ onRegister }: CadastroSignUpProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -145,14 +146,18 @@ export function CadastroSignUp({ onRegister }: CadastroSignUpProps) {
             <label htmlFor="senha">Senha:</label>
             <div className="inputWithIcon">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="senha"
                 placeholder="Crie uma senha"
                 required
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
-              <VisibilityOutlinedIcon className="icon" />
+              <VisibilityOutlinedIcon
+                className="icon"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowPassword(!showPassword)}
+              />
             </div>
           </div>
 
@@ -160,14 +165,18 @@ export function CadastroSignUp({ onRegister }: CadastroSignUpProps) {
             <label htmlFor="confirmarSenha">Confirmar senha:</label>
             <div className="inputWithIcon">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="confirmarSenha"
                 placeholder="Confirme sua senha"
                 required
                 value={confirmarSenha}
                 onChange={(e) => setConfirmarSenha(e.target.value)}
               />
-              <VisibilityOutlinedIcon className="icon" />
+              <VisibilityOutlinedIcon
+                className="icon"
+                style={{ cursor: "pointer" }}
+                onClick={() => setShowPassword(!showPassword)}
+              />
             </div>
           </div>
           {error && (

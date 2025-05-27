@@ -1,6 +1,5 @@
 import React from "react";
 import { Main } from "../../components/SideBarPages";
-// import { UserInfoCard } from "../../components/Abono/UserInfoCard";
 import { UserCardInfo } from "../../components/UserInfo";
 import { AbonoForm } from "../../components/Abono/AbonoForm";
 import Typography from "@mui/material/Typography";
@@ -9,6 +8,7 @@ import Box from "@mui/material/Box";
 import { useUser } from "../../hooks/useUser";
 import { Greeting } from "../../components/saudacao";
 import { useNavigate } from "react-router-dom";
+import { Divider } from "@mui/material";
 
 export const SolicitarAbonoPage = () => {
   const navigate = useNavigate();
@@ -89,14 +89,28 @@ export const SolicitarAbonoPage = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            mb: 3,
+            mt: 3,
+            mb: -3,
+            paddingLeft: "1.8rem",
           }}
         >
+          <Divider
+            orientation="vertical"
+            sx={{ height: "20px", width: "3px", bgcolor: "#5D3998", mr: 0.5 }}
+          />
           <Typography variant="h6" color="textSecondary">
             Solicitar Abono
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            mb: 3,
+          }}
+        >
+          {" "}
           <Typography variant="body2">{currentDate}</Typography>
         </Box>
 
@@ -104,7 +118,7 @@ export const SolicitarAbonoPage = () => {
           <Button
             variant="contained"
             onClick={handleSolicitarAbonoClick}
-            sx={{ mt: 3 }}
+            sx={{ mt: 3, backgroundColor: "rgba(105, 69, 164)" }}
           >
             Solicitar Abono
           </Button>

@@ -15,11 +15,13 @@ import { UserProvider } from "./contexts/UserProvider";
 import { PrivateRoute } from "./components/privateRoute/PrivateRoute";
 import { EspelhoPontoPage } from "./pages/EspelhoPonto";
 import { SolicitarAbonoPage } from "./pages/Abono";
+import { ErrorPage } from "./components/Erro/index";
 
 export function App() {
   const [loggedInUserId, setLoggedInUserId] = useState<string | null>(
     localStorage.getItem("loggedInUserId")
   );
+
   const handleLoginSuccess = (msg: string, userId: string) => {
     console.log(msg);
     setLoggedInUserId(userId);
@@ -34,7 +36,6 @@ export function App() {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          {/* Rotas de Autenticação */}
           <Route
             path="/"
             element={<LoginSignUp onLogin={handleLoginSuccess} />}
@@ -44,7 +45,6 @@ export function App() {
             element={<CadastroSignUp onRegister={handleRegisterSuccess} />}
           />
 
-          {/* Rotas Protegidas (dentro do defaultLayout) */}
           <Route
             path="/app/*"
             element={
@@ -66,6 +66,9 @@ export function App() {
               path="ponto/solicitarabono"
               element={<SolicitarAbonoPage />}
             />
+            <Route path="ferias" element={<ErrorPage />} />
+            <Route path="rh" element={<ErrorPage />} />
+            <Route path="pagamento" element={<ErrorPage />} />
           </Route>
 
           <Route

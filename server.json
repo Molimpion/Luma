@@ -22,8 +22,8 @@
       "password": "carlos123",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 10,
-      "saidas": 10,
+      "entradas": 12,
+      "saidas": 11,
       "faltas": 0
     },
     {
@@ -51,7 +51,37 @@
       "entradas": 1,
       "saidas": 1,
       "faltas": 0
+    },
+    {
+      "id": "7d7e",
+      "nome": "Marcos Uchoas Pina Vinicios",
+      "cpf": "01234567891",
+      "username": "marcosuchoas",
+      "email": "marcosuchoas@gmail.com",
+      "password": "marcos123",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 1,
+      "saidas": 1,
+      "faltas": 0
     }
   ],
-  "pontos": []
+  "pontos": [
+    {
+      "id": "1748313804382",
+      "userId": "7d7e",
+      "dataHora": "segunda-feira | 23:43:24",
+      "timestamp": 1748313804382,
+      "date": "2025-05-26",
+      "type": "entrada"
+    },
+    {
+      "id": "1748313805020",
+      "userId": "7d7e",
+      "dataHora": "segunda-feira | 23:43:25",
+      "timestamp": 1748313805020,
+      "date": "2025-05-26",
+      "type": "saida"
+    }
+  ]
 }

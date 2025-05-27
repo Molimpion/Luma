@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -15,7 +15,6 @@ import {
   TextField,
   Snackbar,
   Alert,
-  SnackbarCloseReason,
 } from "@mui/material";
 import {
   ArrowBackIosOutlined as ArrowBack,
@@ -31,16 +30,20 @@ import { UserCardInfo } from "../../components/UserInfo";
 import { Greeting } from "../../components/saudacao";
 import { useUser } from "../../hooks/useUser";
 
+// Configuração do ícone padrão do Leaflet
 const DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// Interface para o tipo Ponto
 interface Ponto {
   id: string;
+  userId: string;
   dataHora: string;
   timestamp: number;
+  date: string;
   type: "entrada" | "saida";
 }
 
@@ -49,25 +52,72 @@ export function RegistrarPonto() {
   const { userData, loadingUser, errorUser, updateUserCounts } = useUser();
 
   const [marcacoesDeHoje, setMarcacoesDeHoje] = useState<Ponto[]>([]);
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedDateTime, setEditedDateTime] = useState("");
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "info">(
-    "success"
-  );
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "info" | "error"
+  >("success");
 
   const simulatedUserLocation = { lat: -8.05, lng: -34.9 };
   const zoomLevel = 15;
 
-  const lastPontoType =
-    marcacoesDeHoje.length > 0 ? marcacoesDeHoje[0].type : "saida";
-  const newPontoType: "entrada" | "saida" =
-    lastPontoType === "entrada" ? "saida" : "entrada";
+  const getTodayDateFormatted = useCallback(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }, []);
 
-  const handleBaterPonto = async () => {
+  const todayDate = useMemo(
+    () => getTodayDateFormatted(),
+    [getTodayDateFormatted]
+  );
+
+  // Efeito para buscar as marcações do dia ao carregar o componente ou mudar o userData
+  useEffect(() => {
+    const fetchPontosDoDia = async () => {
+      if (userData?.id) {
+        try {
+          const response = await fetch(
+            `/api/pontos?userId=${userData.id}&date=${todayDate}`
+          );
+          if (!response.ok) {
+            throw new Error("Erro ao buscar pontos do dia");
+          }
+          const pontos = await response.json();
+          setMarcacoesDeHoje(
+            pontos.sort((a: Ponto, b: Ponto) => b.timestamp - a.timestamp)
+          );
+        } catch (error) {
+          console.error("Erro ao carregar marcações do dia.", error);
+          setSnackbarMessage("Erro ao carregar marcações de hoje");
+          setSnackbarSeverity("error");
+          setOpenSnackbar(true);
+        }
+      }
+    };
+    fetchPontosDoDia();
+  }, [userData?.id, todayDate]);
+
+  // Determina o tipo do próximo ponto a ser batido
+  const newPontoType: "entrada" | "saida" = useMemo(() => {
+    const lastPontoType =
+      marcacoesDeHoje.length > 0 ? marcacoesDeHoje[0].type : "saida";
+    return lastPontoType === "entrada" ? "saida" : "entrada";
+  }, [marcacoesDeHoje]);
+
+  // Handler para bater o ponto
+  const handleBaterPonto = useCallback(async () => {
+    if (marcacoesDeHoje.length >= 2) {
+      setSnackbarMessage("Você já registrou o máximo de 2 pontos hoje");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
@@ -82,51 +132,75 @@ export function RegistrarPonto() {
 
     const newPonto: Ponto = {
       id: now.getTime().toString(),
+      userId: userData!.id,
       dataHora: formattedDateTime,
       timestamp: now.getTime(),
+      date: todayDate,
       type: newPontoType,
     };
 
-    setMarcacoesDeHoje((prev) => [newPonto, ...prev]);
-    await updateUserCounts(newPontoType);
+    try {
+      const response = await fetch("/api/pontos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPonto),
+      });
 
-    setSnackbarMessage("Ponto registrado com sucesso!");
-    setSnackbarSeverity("success");
-    setOpenSnackbar(true);
-  };
+      if (!response.ok) {
+        throw new Error("Erro ao registrar ponto.");
+      }
+      const registeredPonto = await response.json();
+      setMarcacoesDeHoje((prev) => [registeredPonto, ...prev]);
+      await updateUserCounts(newPontoType);
 
-  const handleCloseSnackbar = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") return;
-    setOpenSnackbar(false);
-  };
+      setSnackbarMessage("Ponto registrado com sucesso!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error("Erro ao registrar ponto:", error);
+      setSnackbarMessage("Erro ao registrar ponto.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    }
+  }, [marcacoesDeHoje, userData, todayDate, newPontoType, updateUserCounts]);
 
-  const handleVoltar = () => {
+  // Handler para fechar o Snackbar
+  const handleCloseSnackbar = useCallback(
+    (_event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === "clickaway") return;
+      setOpenSnackbar(false);
+    },
+    []
+  );
+
+  // Handler para retornar à página anterior
+  const handleVoltar = useCallback(() => {
     navigate("/app/ponto");
-  };
+  }, [navigate]);
 
-  const handleOpenEditModal = (dataHora: string) => {
+  // Handlers para o modal de edição
+  const handleOpenEditModal = useCallback((dataHora: string) => {
     setEditedDateTime(dataHora);
     setEditModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseEditModal = () => {
+  const handleCloseEditModal = useCallback(() => {
     setEditModalOpen(false);
-
     setEditedDateTime("");
-  };
+  }, []);
 
-  const handleSaveEditedPonto = () => {
+  const handleSaveEditedPonto = useCallback(() => {
     handleCloseEditModal();
     setSnackbarMessage(
       "Solicitação de alteração enviada ao RH. Em breve retornaremos com a resposta."
     );
     setSnackbarSeverity("info");
     setOpenSnackbar(true);
-  };
+  }, [handleCloseEditModal]);
 
+  // Renderização condicional para estados de carregamento e erro
   if (loadingUser) {
     return (
       <Box
@@ -141,6 +215,7 @@ export function RegistrarPonto() {
       </Box>
     );
   }
+
   if (errorUser) {
     return (
       <Box
@@ -155,6 +230,7 @@ export function RegistrarPonto() {
       </Box>
     );
   }
+
   if (!userData) {
     return (
       <Box
@@ -172,6 +248,8 @@ export function RegistrarPonto() {
       </Box>
     );
   }
+
+  const isPontoDisabled = marcacoesDeHoje.length >= 2;
 
   return (
     <>
@@ -205,12 +283,7 @@ export function RegistrarPonto() {
       >
         <Divider
           orientation="vertical"
-          sx={{
-            height: "20px",
-            width: "3px",
-            bgcolor: "#5D3998",
-            mr: 0.5,
-          }}
+          sx={{ height: "20px", width: "3px", bgcolor: "#5D3998", mr: 0.5 }}
         />
         <Typography variant="subtitle1" color="textSecondary">
           Registrar Ponto
@@ -338,17 +411,28 @@ export function RegistrarPonto() {
                       flexDirection: "column",
                       bgcolor: "primary.main",
                       color: "white",
-                      cursor: "pointer",
-                      background:
-                        "linear-gradient(180deg, #5D3998 0%, #8E6CAC 100%)",
+                      cursor: isPontoDisabled ? "not-allowed" : "pointer",
+                      background: isPontoDisabled
+                        ? "lightgray"
+                        : "linear-gradient(180deg, #5D3998 0%, #8E6CAC 100%)",
                     }}
-                    onClick={handleBaterPonto}
+                    onClick={isPontoDisabled ? undefined : handleBaterPonto}
+                    elevation={3}
                   >
                     <Typography fontWeight="bold" variant="h6">
                       Bater ponto
                     </Typography>
                   </Paper>
                 </Box>
+                {isPontoDisabled && (
+                  <Typography
+                    variant="caption"
+                    color="error"
+                    sx={{ mt: 1, textAlign: "center" }}
+                  >
+                    Você já registrou o máximo de 2 pontos hoje.
+                  </Typography>
+                )}
               </Paper>
 
               <Box
