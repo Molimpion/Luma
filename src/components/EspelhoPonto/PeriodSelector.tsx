@@ -4,7 +4,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 interface PeriodSelectorProps {
-  currentMonth: string;
+  currentMonth: Date;
   onPrevious: () => void;
   onNext: () => void;
 }
@@ -15,6 +15,10 @@ export const PeriodSelector: React.FC<PeriodSelectorProps> = ({
   onNext,
 }) => {
   const borderColor = "rgba(105, 69, 164)";
+
+  const formattedMonthYear = currentMonth
+    .toLocaleString("pt-BR", { month: "long", year: "numeric" })
+    .toUpperCase();
   return (
     <Box
       sx={{
@@ -52,7 +56,7 @@ export const PeriodSelector: React.FC<PeriodSelectorProps> = ({
             fontWeight: "bold",
           }}
         >
-          {currentMonth}
+          {formattedMonthYear}
         </Typography>
         <IconButton onClick={onNext} aria-label="próximo mês" sx={{ ml: 2 }}>
           <ArrowRightIcon sx={{ fontSize: "inherit" }} />

@@ -67,9 +67,9 @@ export const PointRecordTable: React.FC<PointRecordTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {records.map((record) => (
+          {records.map((record, index) => (
             <TableRow
-              key={record.date}
+              key={record.date || index}
               sx={{
                 "&:nth-child(even)": {
                   backgroundColor: "rgba(105, 69, 164, 0.1)",
@@ -90,6 +90,7 @@ export const PointRecordTable: React.FC<PointRecordTableProps> = ({
                 {record.date}
               </TableCell>
               <TableCell align="center">{record.entrada}</TableCell>
+
               <TableCell align="right">{record.saida}</TableCell>
             </TableRow>
           ))}

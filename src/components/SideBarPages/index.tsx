@@ -4,12 +4,10 @@ import type { CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -27,34 +25,18 @@ import { LogoutButton } from "../logout/index";
 
 const drawerWidth = 230;
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(
-  ({ theme, open }): CSSObject => ({
-    transition: theme.transitions.create(["position", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: "100%",
-    zIndex: theme.zIndex.drawer + 1,
-    position: "fixed",
-    top: 0,
-    backgroundColor: "transparent",
-    boxShadow: "none",
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  })
-);
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+  transition: theme.transitions.create(["position", "width"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  width: "100%",
+  zIndex: theme.zIndex.drawer + 1,
+  position: "fixed",
+  top: 0,
+  backgroundColor: "transparent",
+  boxShadow: "none",
+}));
 
 export const Main = styled("main", {
   shouldForwardProp: (prop) => prop !== "open",
@@ -105,15 +87,7 @@ interface SidebarItem {
   color?: string;
 }
 
-interface PersistentDrawerLeftProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export function PersistentDrawerLeft({
-  open,
-  setOpen,
-}: PersistentDrawerLeftProps) {
+export function PersistentDrawerLeft() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useUser();
@@ -139,7 +113,6 @@ export function PersistentDrawerLeft({
   );
 
   const handleItemClick = (item: SidebarItem) => {
-    setOpen(false);
     if (item.text === "Sair") {
       logout();
       localStorage.removeItem("loggedInUserId");
@@ -178,18 +151,10 @@ export function PersistentDrawerLeft({
           boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.2)",
         }}
       >
-        <IconButton
-          sx={{ color: "#5D3998" }}
-          aria-label="open drawer"
-          onClick={() => setOpen(!open)}
-          edge="start"
-        >
-          <MenuIcon />
-        </IconButton>
         <img src={Logo} alt="Logo da Luma" height="30" />
       </Box>
 
-      <AppBar open={open}>
+      <AppBar>
         <Toolbar />
       </AppBar>
 
@@ -210,7 +175,6 @@ export function PersistentDrawerLeft({
             left: 0,
             overflowX: "hidden",
             overflowY: "auto",
-            transform: open ? "translateX(0)" : `translateX(-${drawerWidth}px)`,
             transition: (theme) =>
               theme.transitions.create("transform", {
                 easing: theme.transitions.easing.sharp,
@@ -220,7 +184,7 @@ export function PersistentDrawerLeft({
         }}
         variant="persistent"
         anchor="left"
-        open={open}
+        open={true}
       >
         <DrawerHeader sx={{ backgroundColor: "white", height: "64px" }} />
         <Divider />
@@ -293,7 +257,7 @@ export function PersistentDrawerLeft({
         <Divider />
       </Drawer>
 
-      <Main open={open}></Main>
+      <Main></Main>
     </Root>
   );
 }

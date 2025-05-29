@@ -16,7 +16,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useUser } from "../../hooks/useUser";
 import { useNavigate } from "react-router-dom";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import { ArrowBackIosOutlined as ArrowBack } from "@mui/icons-material";
+import { CloseOutlined } from "@mui/icons-material";
 
 export const LogoutButton = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -108,7 +108,7 @@ export const LogoutButton = () => {
         <Box
           sx={{
             top: 8,
-            right: 8,
+            left: 8,
             position: "absolute",
           }}
         >
@@ -122,9 +122,8 @@ export const LogoutButton = () => {
               },
             }}
           >
-            <ArrowBack />
+            <CloseOutlined />
           </Button>
-          <Typography>Retornar</Typography>
         </Box>
         <DialogActions
           sx={{

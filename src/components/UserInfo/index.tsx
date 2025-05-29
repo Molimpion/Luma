@@ -79,6 +79,7 @@ interface UserInfoProps {
   entradasStyle?: React.CSSProperties;
   saidaStyle?: React.CSSProperties;
   faltasStyle?: React.CSSProperties;
+  faltas?: number;
 }
 
 export function UserCardInfo({
@@ -86,6 +87,7 @@ export function UserCardInfo({
   entradasStyle,
   saidaStyle,
   faltasStyle,
+  faltas,
 }: UserInfoProps) {
   const { userData, loadingUser, errorUser } = useUser();
 
@@ -157,7 +159,7 @@ export function UserCardInfo({
           <InfoItemRoot style={faltasStyle}>
             <InfoNumber>
               <CloseOutlined sx={{ fontSize: "2rem", color: "#FFF" }} />
-              <span>{userData.faltas}</span>
+              <span>{faltas !== undefined ? faltas : userData.faltas}</span>
             </InfoNumber>
             <InfoText>Faltas</InfoText>
           </InfoItemRoot>

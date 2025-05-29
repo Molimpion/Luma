@@ -314,15 +314,18 @@ export function RegistrarPonto() {
         >
           <IconButton
             onClick={handleVoltar}
-            sx={{ position: "absolute", top: 8, right: 8 }}
+            sx={{
+              position: "absolute",
+              top: 8,
+              left: 8,
+              pt: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
           >
             <ArrowBack />
-            <Typography>Retornar</Typography>
           </IconButton>
 
-          <Typography variant="h5" fontWeight="bold" mb={2}>
-            Registrar ponto
-          </Typography>
           <Box sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Registrar ponto

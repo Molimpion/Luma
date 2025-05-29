@@ -9,8 +9,8 @@
       "password": "123456",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 0,
-      "saidas": 0,
+      "entradas": 1,
+      "saidas": 1,
       "faltas": 0
     },
     {
@@ -22,8 +22,8 @@
       "password": "carlos123",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 12,
-      "saidas": 11,
+      "entradas": 13,
+      "saidas": 12,
       "faltas": 0
     },
     {
@@ -35,8 +35,8 @@
       "password": "maria123456",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 3,
-      "saidas": 3,
+      "entradas": 4,
+      "saidas": 4,
       "faltas": 0
     },
     {
@@ -48,8 +48,8 @@
       "password": "luma12345",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 1,
-      "saidas": 1,
+      "entradas": 2,
+      "saidas": 2,
       "faltas": 0
     },
     {
@@ -59,6 +59,32 @@
       "username": "marcosuchoas",
       "email": "marcosuchoas@gmail.com",
       "password": "marcos123",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 2,
+      "saidas": 2,
+      "faltas": 0
+    },
+    {
+      "id": "5e09",
+      "nome": "Thiago Santos",
+      "cpf": "12345678910",
+      "username": "thiagost",
+      "email": "thiagost@gmail.com",
+      "password": "thiago123",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 2,
+      "saidas": 2,
+      "faltas": 0
+    },
+    {
+      "id": "3c07",
+      "nome": "josi",
+      "cpf": "12345678910",
+      "username": "josigalega",
+      "email": "josigalega@gmail.com",
+      "password": "maria123",
       "descricao": "Novo Colaborador",
       "avatar": "",
       "entradas": 1,
@@ -81,6 +107,134 @@
       "dataHora": "segunda-feira | 23:43:25",
       "timestamp": 1748313805020,
       "date": "2025-05-26",
+      "type": "saida"
+    },
+    {
+      "id": "1748345351353",
+      "userId": "5e09",
+      "dataHora": "terça-feira | 08:29:11",
+      "timestamp": 1748345351353,
+      "date": "2025-05-27",
+      "type": "entrada"
+    },
+    {
+      "id": "1748345352229",
+      "userId": "5e09",
+      "dataHora": "terça-feira | 08:29:12",
+      "timestamp": 1748345352229,
+      "date": "2025-05-27",
+      "type": "saida"
+    },
+    {
+      "id": "1748466946536",
+      "userId": "d63d",
+      "dataHora": "quarta-feira | 18:15:46",
+      "timestamp": 1748466946536,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748466947438",
+      "userId": "d63d",
+      "dataHora": "quarta-feira | 18:15:47",
+      "timestamp": 1748466947438,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748471680996",
+      "userId": "9715",
+      "dataHora": "quarta-feira | 19:34:40",
+      "timestamp": 1748471680996,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748471681414",
+      "userId": "9715",
+      "dataHora": "quarta-feira | 19:34:41",
+      "timestamp": 1748471681414,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748472656126",
+      "userId": "179e",
+      "dataHora": "quarta-feira | 19:50:56",
+      "timestamp": 1748472656126,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748472663596",
+      "userId": "179e",
+      "dataHora": "quarta-feira | 19:51:03",
+      "timestamp": 1748472663596,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748473868194",
+      "userId": "7d7e",
+      "dataHora": "quarta-feira | 20:11:08",
+      "timestamp": 1748473868194,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748473871335",
+      "userId": "7d7e",
+      "dataHora": "quarta-feira | 20:11:11",
+      "timestamp": 1748473871335,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748473925116",
+      "userId": "3c07",
+      "dataHora": "quarta-feira | 20:12:05",
+      "timestamp": 1748473925116,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748473925443",
+      "userId": "3c07",
+      "dataHora": "quarta-feira | 20:12:05",
+      "timestamp": 1748473925443,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748474359621",
+      "userId": "5e09",
+      "dataHora": "quarta-feira | 20:19:19",
+      "timestamp": 1748474359621,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748474360447",
+      "userId": "5e09",
+      "dataHora": "quarta-feira | 20:19:20",
+      "timestamp": 1748474360447,
+      "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748476077931",
+      "userId": "6412",
+      "dataHora": "quarta-feira | 20:47:57",
+      "timestamp": 1748476077931,
+      "date": "2025-05-28",
+      "type": "entrada"
+    },
+    {
+      "id": "1748476078287",
+      "userId": "6412",
+      "dataHora": "quarta-feira | 20:47:58",
+      "timestamp": 1748476078287,
+      "date": "2025-05-28",
       "type": "saida"
     }
   ]

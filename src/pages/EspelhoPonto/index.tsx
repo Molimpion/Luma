@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Typography, Divider, Button, IconButton } from "@mui/material"; // Importe IconButton aqui
+import { useState, useEffect } from "react";
+import { Box, Typography, Divider, IconButton, Button } from "@mui/material";
 import { Main } from "../../components/SideBarPages";
 import { UserCardInfo } from "../../components/UserInfo";
 import { PointRecordTable } from "../../components/EspelhoPonto/PointRecordTable";
@@ -8,22 +8,27 @@ import { PointActions } from "../../components/EspelhoPonto/PointAction";
 import { useUser } from "../../hooks/useUser";
 import { Greeting } from "../../components/saudacao";
 import { useNavigate } from "react-router-dom";
-import { ArrowBackIosOutlined as ArrowBack } from "@mui/icons-material"; // Importe o ícone aqui
+import { ArrowBackIosOutlined as ArrowBack } from "@mui/icons-material";
+import {
+  RawPontoData,
+  PontoRecord,
+} from "../../contexts/UserContextDefinition";
+
+const getMonthRange = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  return { first: firstDayOfMonth, last: lastDayOfMonth };
+};
+
+const toIso = (d: Date) => d.toISOString().slice(0, 10);
 
 export const EspelhoPontoPage = () => {
   const navigate = useNavigate();
   const { userData, loadingUser, errorUser } = useUser();
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const pointRecords = [
-    { date: "15/05", entrada: "", saida: "" },
-    { date: "16/05", entrada: "", saida: "" },
-    { date: "17/05", entrada: "", saida: "" },
-    { date: "18/05", entrada: "", saida: "" },
-    { date: "19/05", entrada: "", saida: "" },
-    { date: "20/05", entrada: "", saida: "" },
-    { date: "21/05", entrada: "", saida: "" },
-    { date: "22/05", entrada: "", saida: "" },
-  ];
+  const [records, setRecords] = useState<PontoRecord[]>([]);
 
   const handlePreviousMonth = () => {
     setCurrentMonth((prevMonth) => {
@@ -31,8 +36,6 @@ export const EspelhoPontoPage = () => {
       newMonth.setMonth(newMonth.getMonth() - 1);
       return newMonth;
     });
-
-    console.log("Mês anterior");
   };
 
   const handleNextMonth = () => {
@@ -41,13 +44,74 @@ export const EspelhoPontoPage = () => {
       newMonth.setMonth(newMonth.getMonth() + 1);
       return newMonth;
     });
-
-    console.log("Próximo mês");
   };
 
   const handleVoltar = () => {
-    navigate(-1); // Retorna para a página anterior
+    navigate(-1);
   };
+
+  useEffect(() => {
+    if (!userData?.id) {
+      return;
+    }
+
+    const { first: firstDateObj, last: lastDateObj } =
+      getMonthRange(currentMonth);
+    const startDate = toIso(firstDateObj);
+    const endDate = toIso(lastDateObj);
+
+    fetch(`http://localhost:3001/pontos?userId=${userData.id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Erro HTTP: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((pontos: RawPontoData[]) => {
+        const filteredPontos = pontos.filter((ponto) => {
+          const pontoDate = ponto.date;
+          return pontoDate >= startDate && pontoDate <= endDate;
+        });
+
+        const mapdosDias: Record<string, PontoRecord> = {};
+
+        filteredPontos.sort((a, b) => a.timestamp - b.timestamp);
+
+        filteredPontos.forEach(({ date, dataHora, type }) => {
+          const hora = dataHora.split("|")[1].replace(/\s/g, "").trim();
+          const [, m, d] = date.split("-");
+          const label = `${d}/${m}`;
+
+          if (!mapdosDias[label]) {
+            mapdosDias[label] = { date: label, entrada: "", saida: "" };
+          }
+
+          if (type === "entrada" && !mapdosDias[label].entrada) {
+            mapdosDias[label].entrada = hora;
+          } else if (type === "saida") {
+            mapdosDias[label].saida = hora;
+          }
+        });
+
+        const daysCount = lastDateObj.getDate();
+        const arr: PontoRecord[] = [];
+
+        for (let day = 1; day <= daysCount; day++) {
+          const dd = String(day).padStart(2, "0");
+          const mm = String(currentMonth.getMonth() + 1).padStart(2, "0");
+          const key = `${dd}/${mm}`;
+
+          const record = mapdosDias[key] || {
+            date: key,
+            entrada: "",
+            saida: "",
+          };
+          arr.push(record);
+        }
+        setRecords(arr);
+      })
+      .catch((err) => console.error(err));
+  }, [currentMonth, userData?.id]);
 
   if (loadingUser) {
     return (
@@ -73,7 +137,9 @@ export const EspelhoPontoPage = () => {
           height: "100vh",
         }}
       >
-        <Typography color="error">{errorUser}</Typography>
+        <Typography color="error">
+          Erro ao carregar usuário: {errorUser}
+        </Typography>
       </Box>
     );
   }
@@ -112,7 +178,7 @@ export const EspelhoPontoPage = () => {
       <Box
         sx={{ marginLeft: "1.7rem", marginTop: "-4.5rem", pr: 3.5, pl: 1.5 }}
       >
-        <UserCardInfo {...userData} cardWidth="100%" />
+        <UserCardInfo cardWidth="100%" faltas={userData.faltas} />
       </Box>
       <Main>
         <Box
@@ -121,7 +187,7 @@ export const EspelhoPontoPage = () => {
             alignItems: "center",
             mt: 3,
             mb: -3,
-            paddingLeft: "1.8rem", // Ajuste o paddingLeft para corresponder
+            paddingLeft: "1.8rem",
           }}
         >
           <Divider
@@ -138,28 +204,18 @@ export const EspelhoPontoPage = () => {
             backgroundColor: "white",
             padding: 3,
             borderRadius: 3,
-            marginTop: 3,
-            mr: 1, // Adicionado margin-right para corresponder
-            ml: 1, // Adicionado margin-left para corresponder
+            marginTop: 4,
+            mr: 1,
+            ml: 1,
           }}
         >
-          {/* Adicionado o IconButton para "Retornar" aqui */}
-          <IconButton
-            onClick={handleVoltar}
-            sx={{ position: "absolute", top: 8, right: 8 }} // Posiciona o botão no canto superior direito
-          >
+          <IconButton onClick={handleVoltar} sx={{ top: 1, left: 8 }}>
             <ArrowBack />
-            <Typography>Retornar</Typography>
+            <Typography fontWeight="bold" sx={{ color: "black" }}>
+              Espelho de Ponto
+            </Typography>
           </IconButton>
-
-          {/* Título da página dentro do container */}
-          <Typography variant="h5" fontWeight="bold" mb={2}>
-            Espelho de Ponto
-          </Typography>
-
-          {/* Container principal */}
           <Box sx={{ p: 2 }}>
-            {/* Caixa de Período (Centralizada) */}
             <Box
               sx={{
                 display: "flex",
@@ -168,23 +224,16 @@ export const EspelhoPontoPage = () => {
               }}
             >
               <PeriodSelector
-                currentMonth={new Intl.DateTimeFormat("pt-BR", {
-                  year: "numeric",
-                  month: "long",
-                })
-                  .format(currentMonth)
-                  .toUpperCase()}
+                currentMonth={currentMonth}
                 onPrevious={handlePreviousMonth}
                 onNext={handleNextMonth}
               />
             </Box>
 
-            {/* Separador visual */}
             <Box sx={{ mt: 4 }}>
               <Divider />
             </Box>
 
-            {/* Container Principal (Layout em Linha) */}
             <Box
               sx={{
                 backgroundColor: "white",
@@ -194,14 +243,10 @@ export const EspelhoPontoPage = () => {
                 flexDirection: { xs: "column", md: "row" },
               }}
             >
-              {/* Parte Esquerda: Lista de Datas, Entrada e Saída */}
               <Box sx={{ flex: 1, width: { xs: "100%", md: "auto" } }}>
-                {" "}
-                {/* Largura total em xs */}
-                <PointRecordTable records={pointRecords} />
+                <PointRecordTable records={records} />
               </Box>
 
-              {/* Parte Direita: Botões de Ação */}
               <PointActions />
             </Box>
           </Box>

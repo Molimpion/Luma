@@ -14,6 +14,21 @@ export interface UserData {
   faltas: number;
 }
 
+export interface RawPontoData {
+  id: string;
+  userId: string;
+  dataHora: string;
+  timestamp: number;
+  date: string;
+  type: "entrada" | "saida";
+}
+
+export interface PontoRecord {
+  date: string;
+  entrada: string;
+  saida: string;
+}
+
 export interface UserContextType {
   userData: UserData | null;
   setUserData: React.Dispatch<React.SetStateAction<UserData | null>>;

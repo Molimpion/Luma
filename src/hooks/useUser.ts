@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   UserContextType,
   UserContext,
-} from "../contexts/UserContextDefinition"; // Importe o contexto e o tipo
+} from "../contexts/UserContextDefinition";
 
 export function useUser(): UserContextType {
   const context = useContext(UserContext);

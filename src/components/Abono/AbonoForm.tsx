@@ -5,18 +5,16 @@ import {
   Typography,
   Box,
   Input,
-  Divider,
   IconButton,
-} from "@mui/material"; // Importe Divider e IconButton
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom"; // Importe useNavigate
+import { useNavigate } from "react-router-dom";
 
 export const AbonoForm = () => {
-  const navigate = useNavigate(); // Inicialize useNavigate
+  const navigate = useNavigate();
 
   const handleEnviarClick = () => {
     console.log("Solicitação de abono enviada");
-    // Lógica para enviar a solicitação
   };
 
   const handleAnexarDocumentoChange = (
@@ -29,7 +27,7 @@ export const AbonoForm = () => {
   };
 
   const handleVoltar = () => {
-    navigate(-1); // Retorna para a página anterior
+    navigate(-1);
   };
 
   return (
@@ -41,38 +39,32 @@ export const AbonoForm = () => {
           alignItems: "center",
           justifyContent: "space-between",
           mt: 3,
-          mb: 2, // Espaçamento maior antes do conteúdo
-          paddingLeft: "1.8rem", // Ajuste o paddingLeft para corresponder
+          mb: 2,
+          paddingLeft: "1.8rem",
+        }}
+      ></Box>
+
+      <Box
+        sx={{
+          mt: 3,
+          backgroundColor: "white",
+          padding: 3,
+          borderRadius: 3,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Divider
-            orientation="vertical"
-            sx={{ height: "20px", width: "3px", bgcolor: "#5D3998", mr: 0.5 }}
-          />
-          <Typography variant="subtitle1" color="textSecondary">
+        <IconButton onClick={handleVoltar} sx={{ mr: 1 }}>
+          <ArrowBackIcon />
+          <Typography fontWeight="bold" sx={{ color: "black", pl: 4, mt: -4 }}>
             Solicitar Abono
           </Typography>
-        </Box>
-        <IconButton onClick={handleVoltar} sx={{ mr: 1 }}>
-          {" "}
-          {/* Ajuste mr para espaçamento */}
-          <ArrowBackIcon />
-          <Typography>Retornar</Typography>
         </IconButton>
-      </Box>
 
-      {/* Container principal do formulário com espaçamento maior */}
-      <Box
-        sx={{ mt: 3, backgroundColor: "white", padding: 3, borderRadius: 3 }}
-      >
-        {/* Conteúdo original do formulário */}
         <Box
           sx={{
             backgroundColor: "rgba(105, 69, 164, 0.1)",
             padding: 3,
             borderRadius: 3,
-            marginTop: 3, // Mantém este marginTop para o conteúdo interno, se necessário
+            marginTop: 3,
           }}
         >
           <Typography variant="subtitle1" sx={{ mb: 1 }}>
