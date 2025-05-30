@@ -60,7 +60,7 @@ export const EspelhoPontoPage = () => {
     const startDate = toIso(firstDateObj);
     const endDate = toIso(lastDateObj);
 
-    fetch(`http://localhost:3001/pontos?userId=${userData.id}`)
+    fetch(`/api/pontos?userId=${userData.id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Erro HTTP: ${res.status}`);

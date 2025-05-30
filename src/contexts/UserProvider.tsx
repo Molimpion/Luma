@@ -31,7 +31,7 @@ export function UserProvider({ children, userId }: UserProviderProps) {
     setLoadingUser(true);
     setErrorUser(null);
     try {
-      const userResponse = await fetch(`http://localhost:3001/users/${userId}`);
+      const userResponse = await fetch(`/api/users/${userId}`);
       if (!userResponse.ok) {
         throw new Error(
           `Erro ao buscar dados do usuário: ${userResponse.status} - ${userResponse.statusText}`
@@ -45,9 +45,7 @@ export function UserProvider({ children, userId }: UserProviderProps) {
       const startDate = toIso(firstDateObj);
       const endDate = toIso(lastDateObj);
 
-      const pontosResponse = await fetch(
-        `http://localhost:3001/pontos?userId=${userId}`
-      );
+      const pontosResponse = await fetch(`/api/pontos?userId=${userId}`);
       if (!pontosResponse.ok) {
         throw new Error(`Erro ao buscar pontos: ${pontosResponse.status}`);
       }
@@ -127,7 +125,7 @@ export function UserProvider({ children, userId }: UserProviderProps) {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

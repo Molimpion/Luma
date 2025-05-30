@@ -22,8 +22,8 @@
       "password": "carlos123",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 13,
-      "saidas": 12,
+      "entradas": 14,
+      "saidas": 13,
       "faltas": 0
     },
     {
@@ -61,8 +61,8 @@
       "password": "marcos123",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 2,
-      "saidas": 2,
+      "entradas": 3,
+      "saidas": 3,
       "faltas": 0
     },
     {
@@ -235,6 +235,38 @@
       "dataHora": "quarta-feira | 20:47:58",
       "timestamp": 1748476078287,
       "date": "2025-05-28",
+      "type": "saida"
+    },
+    {
+      "id": "1748636835722",
+      "userId": "d63d",
+      "dataHora": "sexta-feira | 17:27:15",
+      "timestamp": 1748636835722,
+      "date": "2025-05-30",
+      "type": "entrada"
+    },
+    {
+      "id": "1748636836611",
+      "userId": "d63d",
+      "dataHora": "sexta-feira | 17:27:16",
+      "timestamp": 1748636836611,
+      "date": "2025-05-30",
+      "type": "saida"
+    },
+    {
+      "id": "1748637211075",
+      "userId": "7d7e",
+      "dataHora": "sexta-feira | 17:33:31",
+      "timestamp": 1748637211075,
+      "date": "2025-05-30",
+      "type": "entrada"
+    },
+    {
+      "id": "1748637211978",
+      "userId": "7d7e",
+      "dataHora": "sexta-feira | 17:33:31",
+      "timestamp": 1748637211978,
+      "date": "2025-05-30",
       "type": "saida"
     }
   ]
