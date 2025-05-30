@@ -1,14 +1,13 @@
-// src/components/ErrorPage/ErrorPage.tsx
 import React from "react";
-import { Box, Typography, Button, Container, Link } from "@mui/material";
+import { Box, Typography, Button, Container } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { useNavigate } from "react-router-dom"; // Importe useNavigate se estiver usando React Router v6
+import { Link, useNavigate } from "react-router-dom";
 
 export const ErrorPage: React.FC = () => {
-  const navigate = useNavigate(); // Hook do React Router v6 para navegação
+  const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate("/"); // Navega para a página inicial (ajuste o caminho conforme sua rota inicial)
+    navigate("/");
   };
 
   return (
@@ -21,7 +20,7 @@ export const ErrorPage: React.FC = () => {
           gap: 2,
         }}
       >
-        <ErrorOutlineIcon sx={{ fontSize: 80, color: "error.main" }} />
+        <ErrorOutlineIcon sx={{ fontSize: 80, color: "#5D3998" }} />
         <Typography variant="h4" gutterBottom>
           Oops! Algo deu errado.
         </Typography>
@@ -29,21 +28,32 @@ export const ErrorPage: React.FC = () => {
           A página que você tentou acessar não foi encontrada ou ocorreu um erro
           inesperado.
         </Typography>
-        <Button variant="contained" color="primary" onClick={handleGoHome}>
+        <Button
+          variant="contained"
+          onClick={() => window.history.back()}
+          sx={{
+            backgroundColor: "#5D3998",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#FFFFFF",
+              color: "#5D3998",
+            },
+          }}
+        >
           Voltar para a página inicial
         </Button>
-        <Typography variant="body2" color="textSecondary">
-          Ou{" "}
-          <Link
-            component="button"
-            onClick={() => window.history.back()}
-            sx={{ cursor: "pointer" }}
-          >
-            voltar para a página anterior
-          </Link>
-        </Typography>
+
         <Typography variant="caption" color="textSecondary">
-          Se o problema persistir, entre em contato com o suporte.
+          Se o problema persistir, entre em contato com{" "}
+          <Link
+            href="mailto:suporte.luma@luma.com.br"
+            sx={{
+              color: "#5D3998",
+              textDecoration: "underline",
+            }}
+          >
+            suporte.luma@luma.com.br
+          </Link>
         </Typography>
       </Box>
     </Container>

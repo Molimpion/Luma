@@ -54,7 +54,10 @@ export const AbonoForm = () => {
       >
         <IconButton onClick={handleVoltar} sx={{ mr: 1 }}>
           <ArrowBackIcon />
-          <Typography fontWeight="bold" sx={{ color: "black", pl: 4, mt: -4 }}>
+          <Typography
+            fontWeight="bold"
+            sx={{ color: "black", pl: 4, ml: -3.5 }}
+          >
             Solicitar Abono
           </Typography>
         </IconButton>

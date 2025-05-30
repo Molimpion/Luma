@@ -318,7 +318,7 @@ export function RegistrarPonto() {
               position: "absolute",
               top: 8,
               left: 8,
-              pt: 1,
+              pt: 4.5,
               display: "flex",
               alignItems: "center",
             }}
