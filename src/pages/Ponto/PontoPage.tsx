@@ -34,36 +34,45 @@ export const PontoPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        width: "100%",
+      }}
+    >
       <Main
         sx={{
           width: "100%",
+          px: { xs: 1, sm: 2, md: 3 },
+          py: { xs: 2, sm: 3, md: 4 },
         }}
       >
-        <Box sx={{ marginLeft: 5, mt: -9.2 }}>
-          <Greeting name={userData?.name || "usuário"} />{" "}
+        <Box sx={{ ml: { xs: 0, md: 5 }, mt: { xs: 2, md: 0 } }}>
+          <Greeting name={userData?.name || "usuário"} />
         </Box>
 
-        <Box sx={{ marginLeft: "1rem", mt: 1, pr: -1, pl: 0 }}>
-          {userData && <UserCardInfo {...userData} cardWidth="100%" />}{" "}
+        <Box sx={{ ml: { xs: 0, md: 2 }, mt: { xs: 2, md: 1 }, width: "100%" }}>
+          {userData && <UserCardInfo {...userData} cardWidth="100%" />}
         </Box>
 
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            mt: 3,
-            mb: 2,
-            ml: 2,
+            mt: { xs: 2, md: 3 },
+            mb: { xs: 2, md: 2 },
+            ml: { xs: 0, md: 2 },
           }}
         >
           <Divider
             orientation="vertical"
             sx={{
-              height: "20px",
-              width: "3px",
+              height: 20,
+              width: 3,
               bgcolor: "#5D3998",
               mr: 0.5,
+              display: { xs: "none", sm: "block" },
             }}
           />
           <Typography variant="subtitle1" color="textSecondary">
@@ -71,7 +80,16 @@ export const PontoPage: React.FC = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: "inline-block" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "column" },
+            flexWrap: "wrap",
+            gap: 2,
+            ml: { xs: 0, md: 2 },
+            mt: { xs: 2, md: 0 },
+          }}
+        >
           {pontoHomeItems.map((item) => (
             <Link
               key={item.title}
@@ -80,7 +98,7 @@ export const PontoPage: React.FC = () => {
                 textDecoration: "none",
                 color: "inherit",
                 display: "block",
-                width: "100%",
+                width: { xs: "100%", sm: "auto" } as any,
               }}
             >
               <PontoHome icon={item.icon} title={item.title} />
@@ -88,7 +106,7 @@ export const PontoPage: React.FC = () => {
           ))}
         </Box>
 
-        <Box sx={{ mt: 4, width: "100%" }}>
+        <Box sx={{ mt: { xs: 4, md: 4 }, width: "100%" }}>
           <Outlet />
         </Box>
       </Main>

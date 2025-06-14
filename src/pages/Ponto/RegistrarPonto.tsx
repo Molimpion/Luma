@@ -239,9 +239,11 @@ export function RegistrarPonto() {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          flexDirection: "column",
+          p: 2,
         }}
       >
-        <Typography>
+        <Typography sx={{ mb: 2 }}>
           Nenhum dado de usuário disponível. Por favor, faça login novamente.
         </Typography>
         <Button onClick={() => navigate("/")}>Ir para Login</Button>
@@ -254,63 +256,58 @@ export function RegistrarPonto() {
   return (
     <>
       <Box
+        component="main"
         sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          padding: "2.5rem",
+          px: { xs: 2, sm: 3, md: 4 },
+          py: { xs: 2, sm: 3, md: 4 },
         }}
       >
-        <Box sx={{ marginBottom: "2.5rem", marginLeft: 3 }}>
+        <Box sx={{ mb: { xs: 2, sm: 3 } }}>
           <Greeting name={userData.name || "usuário"} />
         </Box>
-      </Box>
 
-      <Box
-        sx={{ marginLeft: "1.7rem", marginTop: "-4.5rem", pr: 3.5, pl: 1.5 }}
-      >
-        <UserCardInfo {...userData} cardWidth="100%" />
-      </Box>
+        <Box
+          sx={{
+            mb: { xs: 2, sm: 3 },
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-start" },
+          }}
+        >
+          <UserCardInfo cardWidth="30rem" />
+        </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mt: 3,
-          mb: -3,
-          paddingLeft: "1.8rem",
-        }}
-      >
-        <Divider
-          orientation="vertical"
-          sx={{ height: "20px", width: "3px", bgcolor: "#5D3998", mr: 0.5 }}
-        />
-        <Typography variant="subtitle1" color="textSecondary">
-          Registrar Ponto
-        </Typography>
-      </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-start" },
+            mb: { xs: 2, sm: 3 },
+          }}
+        >
+          <Divider
+            orientation="vertical"
+            sx={{
+              height: 24,
+              width: 4,
+              bgcolor: "#5D3998",
+              mr: 1,
+              display: { xs: "none", sm: "block" },
+            }}
+          />
+          <Typography variant="subtitle1" color="textSecondary">
+            Registrar Ponto
+          </Typography>
+        </Box>
 
-      <Box
-        sx={{
-          padding: 3,
-          mr: 1,
-          ml: 1,
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
         <Paper
           sx={{
-            width: { xs: "100%", lg: "100%" },
-            maxWidth: "100%",
-            flexShrink: 0,
-            borderRadius: "10px",
-            padding: 3,
+            width: "100%",
+            borderRadius: 2,
+            p: { xs: 2, sm: 3 },
             position: "relative",
             display: "flex",
             flexDirection: "column",
-            mt: 2,
           }}
+          elevation={3}
         >
           <IconButton
             onClick={handleVoltar}
@@ -318,15 +315,13 @@ export function RegistrarPonto() {
               position: "absolute",
               top: 8,
               left: 8,
-              pt: 4.5,
-              display: "flex",
-              alignItems: "center",
+              p: { xs: 1, sm: 1.5 },
             }}
           >
             <ArrowBack />
           </IconButton>
 
-          <Box sx={{ p: 2 }}>
+          <Box sx={{ mt: { xs: 4, sm: 6 } }}>
             <Typography variant="h6" gutterBottom>
               Registrar ponto
             </Typography>
@@ -337,7 +332,7 @@ export function RegistrarPonto() {
                 gap: 2,
                 gridTemplateColumns: {
                   xs: "1fr",
-                  md: "480px 1fr",
+                  md: "minmax(400px, 1fr) 2fr",
                 },
                 gridTemplateRows: {
                   xs: "auto auto auto",
@@ -352,7 +347,7 @@ export function RegistrarPonto() {
                   gridColumn: "1",
                   display: "flex",
                   flexDirection: "column",
-                  borderRadius: "10px",
+                  borderRadius: 2,
                   p: 2,
                   background: "rgba(105, 69, 164, 0.13)",
                   border: "1px solid #5D3998",
@@ -406,8 +401,8 @@ export function RegistrarPonto() {
                   <Paper
                     sx={{
                       borderRadius: "50%",
-                      width: 150,
-                      height: 150,
+                      width: { xs: 120, sm: 140, md: 150 },
+                      height: { xs: 120, sm: 140, md: 150 },
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
@@ -440,9 +435,9 @@ export function RegistrarPonto() {
 
               <Box
                 sx={{
-                  gridRow: "1",
+                  gridRow: { xs: "2", md: "1" },
                   gridColumn: { xs: "1", md: "2" },
-                  height: { xs: "300px", md: "400px" },
+                  height: { xs: 200, sm: 300, md: 400 },
                   borderRadius: "10px",
                   border: "1px solid #5D3998",
                   overflow: "hidden",
@@ -482,15 +477,23 @@ export function RegistrarPonto() {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
+                    flexWrap: "wrap",
                     lineHeight: "1.5",
                     mt: 1,
+                    gap: 1,
                   }}
                 >
                   <Typography mr={1}>08:00</Typography>
                   <Typography>-----</Typography>
                   <Typography mx={1}>12:00</Typography>
                   <Typography>----</Typography>
-                  <RestaurantOutlined sx={{ mx: 1, verticalAlign: "middle" }} />
+                  <RestaurantOutlined
+                    sx={{
+                      mx: 1,
+                      verticalAlign: "middle",
+                      fontSize: { xs: 20, sm: 24 },
+                    }}
+                  />
                   <Typography>----</Typography>
                   <Typography mx={1}>13:00</Typography>
                   <Typography>-----</Typography>
@@ -517,7 +520,7 @@ export function RegistrarPonto() {
         </Paper>
       </Box>
 
-      <Dialog open={editModalOpen} onClose={handleCloseEditModal}>
+      <Dialog open={editModalOpen} onClose={handleCloseEditModal} fullWidth>
         <DialogTitle>Solicitar Correção de Ponto</DialogTitle>
         <DialogContent>
           <TextField

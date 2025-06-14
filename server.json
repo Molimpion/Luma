@@ -22,8 +22,8 @@
       "password": "carlos123",
       "descricao": "Novo Colaborador",
       "avatar": "",
-      "entradas": 14,
-      "saidas": 13,
+      "entradas": 15,
+      "saidas": 14,
       "faltas": 0
     },
     {
@@ -85,6 +85,19 @@
       "username": "josigalega",
       "email": "josigalega@gmail.com",
       "password": "maria123",
+      "descricao": "Novo Colaborador",
+      "avatar": "",
+      "entradas": 1,
+      "saidas": 1,
+      "faltas": 0
+    },
+    {
+      "id": "3802",
+      "nome": "teste da silva santana",
+      "cpf": "12345678910",
+      "username": "teste",
+      "email": "teste@gmail.com",
+      "password": "teste123",
       "descricao": "Novo Colaborador",
       "avatar": "",
       "entradas": 1,
@@ -267,6 +280,38 @@
       "dataHora": "sexta-feira | 17:33:31",
       "timestamp": 1748637211978,
       "date": "2025-05-30",
+      "type": "saida"
+    },
+    {
+      "id": "1748733676170",
+      "userId": "d63d",
+      "dataHora": "sábado | 20:21:16",
+      "timestamp": 1748733676170,
+      "date": "2025-05-31",
+      "type": "entrada"
+    },
+    {
+      "id": "1748733677204",
+      "userId": "d63d",
+      "dataHora": "sábado | 20:21:17",
+      "timestamp": 1748733677204,
+      "date": "2025-05-31",
+      "type": "saida"
+    },
+    {
+      "id": "1748734516739",
+      "userId": "3802",
+      "dataHora": "sábado | 20:35:16",
+      "timestamp": 1748734516739,
+      "date": "2025-05-31",
+      "type": "entrada"
+    },
+    {
+      "id": "1748734552776",
+      "userId": "3802",
+      "dataHora": "sábado | 20:35:52",
+      "timestamp": 1748734552776,
+      "date": "2025-05-31",
       "type": "saida"
     }
   ]
