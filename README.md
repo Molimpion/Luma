@@ -18,8 +18,6 @@ Luma é uma aplicação front-end desenvolvida para ser uma plataforma web de re
 
 ## Tecnologias
 
-## Tecnologias
-
 - **Frontend Core**: **React** (v18.2.0), **Vite** (v6.2.0), **TypeScript** (~v5.7.2).
 - **Roteamento**: **React Router DOM** (v7.5.3) para navegação na aplicação.
 - **Estilo e Componentes UI**:
